@@ -542,6 +542,8 @@ class JointParticleFilter:
                 #         part = self.particles[j]
                 #         self.particles[j] = self.getParticleWithGhostInJail(part, i)
                 # else:
+                #if i == 0:
+                    #print 'this is ghost ', i, ' and noisyDistance is ', noisyDistance
                 if noisyDistance is not None:
                     emissionModel = emissionModels[i]
                     distance = util.manhattanDistance(particle[i], pacmanPosition)
@@ -551,9 +553,9 @@ class JointParticleFilter:
             distribution[particle] += probability
 
             # Sample particles uniformly from the current distribution
-            if distribution.totalCount() == 0.0:  # Special case 2
-                self.initializeParticles()
-                return
+        if distribution.totalCount() == 0.0:  # Special case 2
+            self.initializeParticles()
+            return
 
         # Sample particles
         self.particles = []
