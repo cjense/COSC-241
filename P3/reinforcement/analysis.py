@@ -11,6 +11,8 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+# Project 3 completed in Fall 2021 by Claire Jensen and Maryam Abuissa for
+# Professor Scott Alfeld's Artificial Intelligence course
 
 ######################
 # ANALYSIS QUESTIONS #
@@ -22,48 +24,61 @@
 def question2():
     answerDiscount = 0.9
     answerNoise = 0.0
+
     return answerDiscount, answerNoise
+
 
 def question3a():
     answerDiscount = 0.5
     answerNoise = 0.0
     answerLivingReward = -1
+
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
 
-def question3b(): # Not sure why this isn't working...
+
+def question3b():
     answerDiscount = 0.7
     answerNoise = 0.3
     answerLivingReward = -1.5
+
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
+
 
 def question3c():
     answerDiscount = 1.0
     answerNoise = 0.0
     answerLivingReward = -0.1
+
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
+
 
 def question3d():
     answerDiscount = 0.5
     answerNoise = 0.2
     answerLivingReward = 0.0
+
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
+
 
 def question3e():
     answerDiscount = 1.0
     answerNoise = 0.1
     answerLivingReward = 1.0
+
     return answerDiscount, answerNoise, answerLivingReward
     # If not possible, return 'NOT POSSIBLE'
+
 
 def question6():
     answerEpsilon = None
     answerLearningRate = None
-    # return answerEpsilon, answerLearningRate
+
     return 'NOT POSSIBLE'
+
 
 if __name__ == '__main__':
     print 'Answers to analysis questions:'

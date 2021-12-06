@@ -11,6 +11,8 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+# Project 2 completed in Fall 2021 by Claire Jensen and Maryam Abuissa for
+# Professor Scott Alfeld's Artificial Intelligence course
 
 from util import manhattanDistance
 from game import Directions
@@ -45,7 +47,7 @@ class ReflexAgent(Agent):
         scores = [self.evaluationFunction(gameState, action) for action in legalMoves]
         bestScore = max(scores)
         bestIndices = [index for index in range(len(scores)) if scores[index] == bestScore]
-        chosenIndex = random.choice(bestIndices) # Pick randomly among the best
+        chosenIndex = random.choice(bestIndices)  # Pick randomly among the best
 
         return legalMoves[chosenIndex]
 
@@ -74,14 +76,20 @@ class ReflexAgent(Agent):
         height = newFood.packBits()[1]
         walls = currentGameState.getWalls()
 
+        # If the position we are looking at is in a wall,
+        # make this very undesirable
         if walls[newPos[0]][newPos[1]]:
             solution = -10000
             return solution
 
+        # If the position is where Pacman is, make this
+        # very undesirable
         if newPos == currentGameState.getPacmanPosition():
             solution = -111111111111
             return solution
 
+        # Find Manhattan distance between ghost's next move
+        # and our next position
         numGhosts = 0
         ghostDist = width + height
         for pos in successorGameState.getGhostPositions():
@@ -96,7 +104,7 @@ class ReflexAgent(Agent):
         minScaredTime = min(newScaredTimes)
 
         # When there are any ghosts who have scared time left, pursue them
-        # Until there's only one scared amount left, then go back to running away
+        # until there's only one scared amount left, then go back to running away
         if minScaredTime > 1:
             solution = 3 * (width + height) - 15 * ghostDist - foodDist - foodTotal
         elif ghostDist > 3:
@@ -106,10 +114,14 @@ class ReflexAgent(Agent):
 
         return solution
 
+
 def closestFood(position, food, w, h):
     positionOfClosestFood = (-1, -1)
     minDist = w + h
     hasFood = False
+
+    # Compute minimum distance between Pacman and
+    # every food in range w, h
     for i in range(w):
         for j in range(h):
             if food[i][j]:
@@ -118,13 +130,18 @@ def closestFood(position, food, w, h):
                 if dist < minDist:
                     minDist = dist
                     positionOfClosestFood = (i, j)
+
     if not hasFood:
         return 0
+
     return util.manhattanDistance(position, positionOfClosestFood)
 
-def totalFood(food, w, h):
 
+def totalFood(food, w, h):
     runningTotal = 0
+
+    # Check all positions in range w, h
+    # and add to running food total
     for i in range(w):
         for j in range(h):
             if food[i][j]:
@@ -158,7 +175,7 @@ class MultiAgentSearchAgent(Agent):
     """
 
     def __init__(self, evalFn = 'scoreEvaluationFunction', depth = '2'):
-        self.index = 0 # Pacman is always agent index 0
+        self.index = 0  # Pacman is always agent index 0
         self.evaluationFunction = util.lookup(evalFn, globals())
         self.depth = int(depth)
 
@@ -370,10 +387,8 @@ def betterEvaluationFunction(currentGameState):
             ghostDist = distance
         numGhosts += 1
 
-    foodDist = closestFood(position, food, width, height)  # We should maybe test this further
+    foodDist = closestFood(position, food, width, height)
     foodTotal = totalFood(food, width, height)
-
-    # If you can eat a power pellet, DO
 
     # When there are any ghosts who have scared time left, pursue them
     # Until there's only one scared amount left, then go back to running away

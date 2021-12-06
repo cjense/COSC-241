@@ -11,6 +11,9 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+# Project 4 completed in Fall 2021 by Claire Jensen and Maryam Abuissa for
+# Professor Scott Alfeld's Artificial Intelligence course
+
 
 import util
 from game import Agent
@@ -168,6 +171,7 @@ class GreedyBustersAgent(BustersAgent):
         closestPos = None
         toReturn = None
 
+        # Find most likely positions in distribution
         for distribution in livingGhostPositionDistributions:
             maxBel = 0
             for pos in distribution:
@@ -177,6 +181,7 @@ class GreedyBustersAgent(BustersAgent):
                     maxPos = pos
             positions.append(maxPos)
 
+        # Find closest position
         minDist = float('inf')
         for pos in positions:
             distance = self.distancer.getDistance(pacmanPosition, pos)
@@ -184,6 +189,7 @@ class GreedyBustersAgent(BustersAgent):
                 minDist = distance
                 closestPos = pos
 
+        # Get action that should be returned based on distance and legal actions
         minDist1 = float('inf')
         for action in legal:
             successorPos = Actions.getSuccessor(pacmanPosition, action)

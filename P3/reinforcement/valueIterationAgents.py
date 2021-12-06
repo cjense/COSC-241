@@ -11,6 +11,8 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+# Project 3 completed in Fall 2021 by Claire Jensen and Maryam Abuissa for
+# Professor Scott Alfeld's Artificial Intelligence course
 
 import mdp, util
 
@@ -45,50 +47,28 @@ class ValueIterationAgent(ValueEstimationAgent):
         self.iterations = iterations
         self.values = util.Counter()  # A Counter is a dict with default 0
 
-        # Write value iteration code here
-        "*** YOUR CODE HERE ***"
-
-        # Create local variables:
-        # U, U' (vectors of utilties for all states) - use a dict associated to the states?
-        # delta - max change in utility for any state
         newUtilities = util.Counter()
-        # delta = 0
-        # I'VE GOTTEN IT TO THE POINT WHERE EVERYTHING IS JUST A LITTLE BIT TOO FAR AWAY FROM 0 (abs val too high)
-        # Loop over the following while delta >= epsilon (1 - lambda) / lambda:
         index = 0
-        # print 'is index less than iterations?', index < iterations, ' with index ', index, ' and iterations ', iterations
-        while (index < iterations):
-            # print 'do we enter this while loop?'
-            index += 1
-            # Set U to U' and delta to 0
-              # is this in the right place?
-            # delta = 0
 
-            # Go through the states in S and do the following:
-            # print 'at index ', index, ' we set the states as following:'
+        while index < iterations:
+            index += 1
+
+            # Calculate qValues for each state in the mdp & for each possible action
             for s in mdp.getStates():
-                # U'[S] = reward at S + lambda (max over actions of sum(prob going to new state)(utility of new state))
                 qValues = []
                 for a in mdp.getPossibleActions(s):
-                    # for next_state, prob in mdp.getTransitionStatesAndProbs(s, a):
                     qValue = 0
                     for stateValue in mdp.getTransitionStatesAndProbs(s, a):
-                        # qValue += mdp.getReward(s, a, stateValue[0])
-                        qValue += (mdp.getReward(s, a, stateValue[0]) + self.discount * self.values[stateValue[0]]) * stateValue[1]
+                        qValue += (mdp.getReward(s, a, stateValue[0]) + self.discount *
+                                   self.values[stateValue[0]]) * stateValue[1]
                     qValues.append(qValue)
+
                 if len(qValues) == 0:
                     newUtilities[s] = 0
                 else:
                     newUtilities[s] = max(qValues)
-                # print 'the old utility of ', self.values[s], ' becomes ', newUtilities[s]
-                # print 'newUtilities at s should be', max(rValues), ' it is ', newUtilities[s]
-                # If the utility at S changed by more than delta, set delta to that change
-                # change = abs(newUtilities[s] - self.values[s])
-                # if change > delta:
-                #    delta = change
-            self.values = newUtilities.copy()
 
-        # Return U
+            self.values = newUtilities.copy()
 
     def getValue(self, state):
         """
@@ -101,18 +81,13 @@ class ValueIterationAgent(ValueEstimationAgent):
           Compute the Q-value of action in state from the
           value function stored in self.values.
         """
-        "*** YOUR CODE HERE ***"
         QValue = 0
+        # Compute reward for each action, store in QValue
         for stateValue in self.mdp.getTransitionStatesAndProbs(state, action):
-            # print 'QValue is ', QValue
-            # mdp.getReward(state, action, stateValue[0])
-            QValue += (self.discount * self.values[stateValue[0]] + self.mdp.getReward(state, action, stateValue[0])) * stateValue[1]  # Consider reward for each action
-            # print 'reward is ', self.mdp.getReward(state, action, stateValue[0])
-            # print 'product of ', self.values[stateValue[0]], ' and ', stateValue[1]
+            QValue += (self.discount * self.values[stateValue[0]] + self.mdp.getReward(state, action, stateValue[0]))\
+                      * stateValue[1]
 
         return QValue
-
-        util.raiseNotDefined()
 
     def computeActionFromValues(self, state):
         """
@@ -123,19 +98,17 @@ class ValueIterationAgent(ValueEstimationAgent):
           there are no legal actions, which is the case at the
           terminal state, you should return None.
         """
-        "*** YOUR CODE HERE ***"
         maxValue = float('-inf')
         bestAction = None
+
+        # To calculate value, look at the possible results and weight the utilities of those states accordingly
         for action in self.mdp.getPossibleActions(state):
-            # to calculate value, look at the possible results and weight the utilities of those states accordingly
             value = self.computeQValueFromValues(state, action)
             if value > maxValue:
                 maxValue = value
                 bestAction = action
 
         return bestAction
-
-        util.raiseNotDefined()
 
     def getPolicy(self, state):
         return self.computeActionFromValues(state)

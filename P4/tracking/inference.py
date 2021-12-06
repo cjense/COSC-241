@@ -11,6 +11,9 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+# Project 4 completed in Fall 2021 by Claire Jensen and Maryam Abuissa for
+# Professor Scott Alfeld's Artificial Intelligence course
+
 
 import itertools
 import sys
@@ -224,6 +227,7 @@ class ExactInference(InferenceModule):
 
         """
         newBeliefs = util.Counter()
+
         # Calculate probability that the ghost is at each legal position given where the ghost was before
         for oldPos in self.legalPositions:
             for newPos in self.getPositionDistribution(self.setGhostPosition(gameState, oldPos)):
@@ -232,18 +236,6 @@ class ExactInference(InferenceModule):
 
         self.beliefs = newBeliefs
         self.beliefs.normalize()
-
-    # OLD CODE
-    #    for oldPos in self.legalPositions:
-    #        prob = 0
-    #        for pos in self.legalPositions:
-    #            newPosDist = self.getPositionDistribution(self.setGhostPosition(gameState, pos))[oldPos]
-    #            prob += newPosDist * self.beliefs[pos]
-    #        #print 'newPostDist is ', newPosDist
-    #        newBeliefs[oldPos] = prob
-    #        # for newPos, prob in newPosDist.items():
-    #    self.beliefs = newBeliefs
-    #    self.beliefs.normalize()
 
     def getBeliefDistribution(self):
         return self.beliefs
@@ -370,7 +362,7 @@ class ParticleFilter(InferenceModule):
         """
 
         particles = []
-        # move each particle according to the transition model
+        # Move each particle according to the transition model
         for particle in self.particles:
             transition = self.getPositionDistribution(self.setGhostPosition(gameState, particle))
             particles.append(util.sample(transition))
@@ -384,6 +376,8 @@ class ParticleFilter(InferenceModule):
         essentially converts a list of particles into a belief distribution (a
         Counter object)
         """
+        # Adding 1 (arbitrary constant) to beliefs b/c each particle will be in a more likely place
+        #  than when we last checked belief distribution
         beliefs = util.Counter()
         for particle in self.particles:
             beliefs[particle] += 1
@@ -522,7 +516,6 @@ class JointParticleFilter:
         if len(noisyDistances) < self.numGhosts:
             return
         emissionModels = [busters.getObservationDistribution(dist) for dist in noisyDistances]
-
         distribution = util.Counter()
 
         for i in range(self.numGhosts):
@@ -537,13 +530,6 @@ class JointParticleFilter:
             probability = 1
             for i in range(self.numGhosts):
                 noisyDistance = noisyDistances[i]
-                # if noisyDistance is None:  # Special case 1
-                #     for j in range(len(self.particles)):
-                #         part = self.particles[j]
-                #         self.particles[j] = self.getParticleWithGhostInJail(part, i)
-                # else:
-                #if i == 0:
-                    #print 'this is ghost ', i, ' and noisyDistance is ', noisyDistance
                 if noisyDistance is not None:
                     emissionModel = emissionModels[i]
                     distance = util.manhattanDistance(particle[i], pacmanPosition)
@@ -552,7 +538,7 @@ class JointParticleFilter:
             # Weight each particle's probability based on the likeliness it gave me the evidence I have
             distribution[particle] += probability
 
-            # Sample particles uniformly from the current distribution
+        # Sample particles uniformly from the current distribution
         if distribution.totalCount() == 0.0:  # Special case 2
             self.initializeParticles()
             return
@@ -620,8 +606,8 @@ class JointParticleFilter:
         newParticles = []
         for oldParticle in self.particles:
             newParticle = list(oldParticle)  # A list of ghost positions
-            # now loop through and update each entry in newParticle...
 
+            # Loop through and update each entry in newParticle
             for i in range(self.numGhosts):
                 transition = getPositionDistributionForGhost(
                     setGhostPositions(gameState, oldParticle), i, self.ghostAgents[i]
